@@ -1,116 +1,123 @@
-// app.js
+const API_KEY = "YOUR_YOUTUBE_API_KEY";
 
-const songs = [
-  {
-    title: "Night Drive",
-    artist: "Disha",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    cover:
-      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    title: "Moon Light",
-    artist: "Disha",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    cover:
-      "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    title: "Dream Beat",
-    artist: "Disha",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    cover:
-      "https://images.unsplash.com/photo-1501612780327-45045538702b?q=80&w=1200&auto=format&fit=crop",
-  },
-];
+const results = document.getElementById("results");
+const player = document.getElementById("player");
 
-function App() {
-  const audioRef = React.useRef(null);
 
-  const [currentSong, setCurrentSong] = React.useState(0);
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [progress, setProgress] = React.useState(0);
+async function searchSong() {
 
-  React.useEffect(() => {
-    if (isPlaying) {
-      audioRef.current.play();
-    } else {
-      audioRef.current.pause();
-    }
-  }, [isPlaying, currentSong]);
+  const query = document.getElementById("searchInput").value;
 
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
+  if (!query) {
+    alert("Enter Song Name");
+    return;
+  }
 
-  const nextSong = () => {
-    setCurrentSong((prev) => (prev + 1) % songs.length);
-    setIsPlaying(true);
-  };
 
-  const prevSong = () => {
-    setCurrentSong((prev) =>
-      prev === 0 ? songs.length - 1 : prev - 1
-    );
-    setIsPlaying(true);
-  };
+  results.innerHTML = `<h2>Loading...</h2>`;
 
-  const updateProgress = () => {
-    const { currentTime, duration } = audioRef.current;
 
-    if (duration) {
-      setProgress((currentTime / duration) * 100);
-    }
-  };
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=12&q=${query}+song&key=${API_KEY}`;
 
-  return (
-    <div className="app">
+  try {
 
-      <div className="player">
+    const response = await fetch(url);
+    const data = await response.json();
 
-        <img
-          src={songs[currentSong].cover}
-          className="cover"
-        />
 
-        <h1>{songs[currentSong].title}</h1>
+    results.innerHTML = "";
 
-        <p>{songs[currentSong].artist}</p>
 
-        <div className="progressBar">
-          <div
-            className="progress"
-            style={{ width: `${progress}%` }}
-          ></div>
+    data.items.forEach(item => {
+
+      const videoId = item.id.videoId;
+      const title = item.snippet.title;
+      const thumbnail = item.snippet.thumbnails.high.url;
+
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+
+      card.innerHTML = `
+        <img src="${thumbnail}">
+        <div class="card-content">
+          <h3>${title}</h3>
         </div>
+      `;
 
-        <div className="controls">
 
-          <button onClick={prevSong}>
-            ⏮
-          </button>
+      card.onclick = () => playSong(videoId);
 
-          <button className="playBtn" onClick={togglePlay}>
-            {isPlaying ? "⏸" : "▶"}
-          </button>
+      results.appendChild(card);
 
-          <button onClick={nextSong}>
-            ⏭
-          </button>
+    });
 
-        </div>
-
-        <audio
-          ref={audioRef}
-          src={songs[currentSong].src}
-          onTimeUpdate={updateProgress}
-          onEnded={nextSong}
-        />
-
-      </div>
-
-    </div>
-  );
+  } catch (err) {
+    results.innerHTML = `<h2>Error Loading Songs</h2>`;
+    console.log(err);
+  }
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+function playSong(videoId) {
+
+  player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+}
+
+
+function showHome() {
+  results.innerHTML = `
+    <h2>🎵 Welcome to Crystal Music</h2>
+    <p>Search any song from YouTube</p>
+  `;
+}
+
+
+async function showTrending() {
+
+  results.innerHTML = `<h2>Loading Trending...</h2>`;
+
+
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&videoCategoryId=10&maxResults=12&key=${API_KEY}`;
+
+  try {
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+
+    results.innerHTML = "";
+
+
+    data.items.forEach(item => {
+
+      const videoId = item.id;
+      const title = item.snippet.title;
+      const thumbnail = item.snippet.thumbnails.high.url;
+
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+
+      card.innerHTML = `
+        <img src="${thumbnail}">
+        <div class="card-content">
+          <h3>${title}</h3>
+        </div>
+      `;
+
+      card.onclick = () => playSong(videoId);
+
+      results.appendChild(card);
+
+    });
+
+  } catch (err) {
+    results.innerHTML = `<h2>Error Loading Trending Songs</h2>`;
+  }
+}
+
+
+showHome();
