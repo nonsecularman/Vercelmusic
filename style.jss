@@ -1,138 +1,151 @@
-/* style.css */
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
 body {
-  background: linear-gradient(135deg, #000000, #111827);
-  font-family: Arial, sans-serif;
+  background: #0f172a;
   color: white;
-  overflow: hidden;
 }
 
-.app {
-  width: 100%;
-  height: 100vh;
-
+.container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 20px;
+  min-height: 100vh;
 }
 
-.player {
-  width: 360px;
-
-  background: rgba(255,255,255,0.05);
-
-  border: 1px solid rgba(255,255,255,0.1);
-
-  backdrop-filter: blur(20px);
-
-  border-radius: 30px;
-
+.sidebar {
+  width: 250px;
+  background: #111827;
   padding: 20px;
+  border-right: 1px solid #1e293b;
+}
 
+.profile {
   text-align: center;
-
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  margin-bottom: 40px;
 }
 
-.cover {
-  width: 100%;
-  height: 320px;
-
-  object-fit: cover;
-
-  border-radius: 20px;
-
-  margin-bottom: 15px;
-}
-
-h1 {
-  font-size: 28px;
-  margin-bottom: 5px;
-}
-
-p {
-  opacity: 0.7;
-  margin-bottom: 20px;
-}
-
-.progressBar {
-  width: 100%;
-  height: 8px;
-
-  background: rgba(255,255,255,0.1);
-
-  border-radius: 50px;
-
-  overflow: hidden;
-
-  margin-bottom: 25px;
-}
-
-.progress {
-  height: 100%;
-
-  background: #00ffcc;
-
-  width: 0%;
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-}
-
-button {
-  width: 65px;
-  height: 65px;
-
-  border: none;
-
+.profile img {
+  width: 90px;
   border-radius: 50%;
+  margin-bottom: 10px;
+}
 
-  font-size: 24px;
+.profile h2 {
+  font-size: 20px;
+}
 
-  cursor: pointer;
-
-  background: rgba(255,255,255,0.1);
-
+.menu button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #1e293b;
   color: white;
-
+  cursor: pointer;
   transition: 0.3s;
 }
 
-button:hover {
-  transform: scale(1.1);
+.menu button:hover {
+  background: #3b82f6;
 }
 
-.playBtn {
-  width: 80px;
-  height: 80px;
-
-  background: #00ffcc;
-
-  color: black;
-
-  font-size: 32px;
+.main {
+  flex: 1;
+  padding: 20px;
 }
 
-@media(max-width: 500px) {
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
 
-  .player {
+.search-box {
+  display: flex;
+  gap: 10px;
+}
+
+.search-box input {
+  width: 300px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+.search-box button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+#results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #1e293b;
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card img {
+  width: 100%;
+}
+
+.card-content {
+  padding: 10px;
+}
+
+.card-content h3 {
+  font-size: 16px;
+}
+
+.player {
+  width: 100%;
+  height: 400px;
+  margin-top: 30px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid #1e293b;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+}
+
+@media(max-width: 768px){
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
     width: 100%;
   }
 
-  .cover {
-    height: 280px;
+  .topbar {
+    flex-direction: column;
+    gap: 15px;
   }
 
+  .search-box input {
+    width: 100%;
+  }
 }
